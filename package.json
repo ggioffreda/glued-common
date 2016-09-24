@@ -1,0 +1,29 @@
+{
+  "name": "glued-common",
+  "version": "0.1.2",
+  "description": "Common definitions for GluedJS micro services.",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^2.0.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ggioffreda/glued-common.git"
+  },
+  "keywords": [
+    "glued",
+    "gluedjs",
+    "glued-js",
+    "processor",
+    "interface",
+    "definition",
+    "api"
+  ],
+  "author": "Giovanni Gioffreda <giovanni.gioffreda@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ggioffreda/glued-common/issues"
+  },
+  "homepage": "https://github.com/ggioffreda/glued-common#readme"
+}
