@@ -1,7 +1,7 @@
-GluedJS - Common Utilities
-==========================
+Glue - Common Utilities
+=======================
 
-Collection of common utilities for GluedJS micro services. Not to do the same boring
+Collection of common utilities for Glue micro services. Not to do the same boring
 things over and over again.
 
 Utilities
@@ -11,7 +11,7 @@ Available utilities are:
 
 - [Data Layer initialisation](#data-layer-initialisation)
 - [Message Bus initialisation](#message-bus-initialisation)
-- [Processor Manager](#processor-manager)
+- [Service Manager](#service-manager)
 
 ### Data Layer initialisation
 
@@ -21,7 +21,7 @@ configuration file using the **GLUED_RETHINKDB** environment variable on service
 If not provided the data layer will be created with an empty configuration.
 
 For a real life example have a look at the 
-[GluedJS Store](https://github.com/ggioffreda/glued-store). Its server makes use of this
+[Glue Store](https://github.com/ggioffreda/glued-store). Its server makes use of this
 and the message bus initialisation below.
 
 Example:
@@ -54,7 +54,7 @@ variables:
   `glued_message_bus`;
   
 For a real life example have a look at the 
-[GluedJS Store](https://github.com/ggioffreda/glued-store). Its server makes use of this
+[Glue Store](https://github.com/ggioffreda/glued-store). Its server makes use of this
 and the data layer initialisation above.
 
 Example:
@@ -75,18 +75,18 @@ messageBus.connectModule(function (err, messageBusChannel) {
 });
 ```
 
-### Processor Manager
+### Service Manager
 
-The processor manager allows you to focus on the business logic of your message 
-processor by doing all the boring initialisation stuff for you. All your processor needs
+The service manager allows you to focus on the business logic of your message 
+service by doing all the boring initialisation stuff for you. All your service needs
 to do is implementing a *requires(dependency)* and a *setUp(dependencies)* methods.
 
 The *requires* method will be used by the manager to understand what dependencies to
-provide when setting up your processor by calling the *setUp* method.
+provide when setting up your service by calling the *setUp* method.
 
-If your processor does not define a *requires* method, nothing will be injected during
+If your service does not define a *requires* method, nothing will be injected during
 set up. Although if you don't need to inject any dependency it's kind of pointless to 
-use the manager. If your processor does not define a *setUp* method an error will be
+use the manager. If your service does not define a *setUp* method an error will be
 raised.
 
 The available dependencies that can be required are:
@@ -98,14 +98,14 @@ The available dependencies that can be required are:
 
 - **message-bus**: the communication bus for publishing messages and subscribing to 
   topics. This will be an instance of *MessageBusChannel* as defined in
-  [GluedJS - Message Bus](https://github.com/ggioffreda/glued-message-bus)
+  [Glue Message Bus](https://github.com/ggioffreda/glued-message-bus)
   
-The only method exposed by the *ProcessorManager* is *load(processor)*.
+The only method exposed by the *ServiceManager* is *load(service)*.
 
-Example of simple processor:
+Example of simple service:
 
 ```javascript
-function MyProcessor() {
+function MyService() {
   // this is the most common use case, you'll need only the message bus
   this.requires = function (dependency) {
     return 'message-bus' === dependency;
@@ -119,11 +119,11 @@ function MyProcessor() {
 }
 ```
 
-You can then load your processor like so:
+You can then load your service like so:
 
 ```javascript
-const ProcessorManager = require('glue-common').ProcessorManager,
-  manager = new ProcessorManager(); // this will initialise a new manager
+const ServiceManager = require('glue-common').ServiceManager,
+  manager = new ServiceManager(); // this will initialise a new manager
   
-manager.load(new MyProcessor());
+manager.load(new MyService());
 ```

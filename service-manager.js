@@ -1,26 +1,26 @@
 const async = require('async');
 
-function ProcessorManager(messageBus, dataLayer) {
+function ServiceManager(messageBus, dataLayer) {
   messageBus = messageBus || require('./message-bus').messageBus;
   dataLayer = dataLayer || require('./data-layer').dataLayer;
   
-  function processorRequires(processor, dependency) {
-    if ('undefined' !== typeof processor.requires && processor.requires) {
-      return processor.requires(dependency);
+  function serviceRequires(service, dependency) {
+    if ('undefined' !== typeof service.requires && service.requires) {
+      return service.requires(dependency);
     }
     
     return false;
   }
 
-  this.load = function (processor) {
+  this.load = function (service) {
     function done(err, dependencies) {
       if (err) throw err;
-      processor.setUp(dependencies);
+      service.setUp(dependencies);
     }
 
     async.series({
       'data-layer': function (cb) {
-        if (!processorRequires(processor, 'data-layer')) {
+        if (!serviceRequires(service, 'data-layer')) {
           cb(null, null);
           return;
         }
@@ -32,7 +32,7 @@ function ProcessorManager(messageBus, dataLayer) {
         });
       },
       'message-bus': function (cb) {
-        if (!processorRequires(processor, 'message-bus')) {
+        if (!serviceRequires(service, 'message-bus')) {
           cb(null, null);
           return;
         }
@@ -49,4 +49,4 @@ function ProcessorManager(messageBus, dataLayer) {
 }
 
 
-module.exports.ProcessorManager = ProcessorManager;
+module.exports.ServiceManager = ServiceManager;
