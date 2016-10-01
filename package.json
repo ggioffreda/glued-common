@@ -1,12 +1,12 @@
 {
   "name": "glued-common",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Common utilities for Glue micro services",
   "main": "index.js",
   "dependencies": {
     "async": "^2.0.1",
     "glued-data-layer": "^0.1.2",
-    "glued-message-bus": "^0.1.3",
+    "glued-message-bus": "^0.2.0",
     "node-uuid": "^1.4.7"
   },
   "devDependencies": {},
