@@ -1,3 +1,3 @@
-module.exports.messageBus = require('./message-bus').messageBus
-module.exports.dataLayer = require('./data-layer').dataLayer
-module.exports.ServiceManager = require('./service-manager').ServiceManager
+module.exports.messageBus = require('./src/message-bus').messageBus
+module.exports.dataLayer = require('./src/data-layer').dataLayer
+module.exports.ServiceManager = require('./src/service-manager').ServiceManager
