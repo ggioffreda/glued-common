@@ -4,6 +4,8 @@ Glue - Common Utilities
 Collection of common utilities for Glue micro services. Not to do the same boring
 things over and over again.
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+
 Utilities
 ---------
 
