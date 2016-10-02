@@ -7,22 +7,24 @@ function ServiceMonitor (service, messageBusChannel) {
   const startTime = Date.now()
 
   if (name !== null) {
-    const pong = function (key, content, cb) {
-      this.pong(content)
+    const monitor = function (key, content, cb) {
+      if (key.substring(0, 4) === 'ping') {
+        this.pong(content)
+      } else if (key.substring(0, 5) === 'state') {
+        this.state()
+      }
       cb()
     }.bind(this)
 
-    messageBusChannel.subscribe('ping', pong)
-    messageBusChannel.subscribe('ping.' + name, pong)
+    const uuid = require('node-uuid')
+    const queue = (name + '_monitor_' + uuid.v4()).replace(/-/g, '')
+
+    messageBusChannel.subscribe('ping', monitor, queue, false, { exclusive: true, autoDelete: true })
+    messageBusChannel.subscribe('ping.' + name, monitor, queue, false, { exclusive: true, autoDelete: true })
 
     if (sm.serviceDefines(service, 'getState')) {
-      const state = function (key, content, cb) {
-        this.state()
-        cb()
-      }.bind(this)
-
-      messageBusChannel.subscribe('state', state)
-      messageBusChannel.subscribe('state.' + name, state)
+      messageBusChannel.subscribe('state', monitor, queue, false, { exclusive: true, autoDelete: true })
+      messageBusChannel.subscribe('state.' + name, monitor, queue, false, { exclusive: true, autoDelete: true })
     }
   }
 
