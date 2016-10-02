@@ -4,6 +4,7 @@ Glue - Common Utilities
 Collection of common utilities for Glue micro services. Not to do the same boring
 things over and over again.
 
+[![Build Status](https://travis-ci.org/ggioffreda/glued-common.svg?branch=master)](https://travis-ci.org/ggioffreda/glued-common)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 Utilities
