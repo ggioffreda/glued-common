@@ -16,7 +16,9 @@ function ServiceManager (messageBus, dataLayer) {
   messageBus = messageBus || require('./message-bus').messageBus
   dataLayer = dataLayer || require('./data-layer').dataLayer
 
-  this.load = function (service) {
+  this.load = function (service, packageInformation) {
+    packageInformation = packageInformation || {}
+
     var monitor = null
 
     function done (err, dependencies) {
@@ -50,6 +52,7 @@ function ServiceManager (messageBus, dataLayer) {
           if (err) throw err
           messageBusChannel.getChannel().prefetch(1)
           monitor = new ServiceMonitor(service, messageBusChannel)
+          monitor.setPackageInformation(packageInformation)
           cb(null, messageBusChannel)
         })
       }

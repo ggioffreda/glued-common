@@ -5,19 +5,21 @@ function ServiceMonitor (service, messageBusChannel) {
   const name = sm.serviceDefines(service, 'getName') ? service['getName']() : null
   const id = uuid.v4()
   const startTime = Date.now()
+  const self = this
+  var packageInformation = {}
 
   if (name !== null) {
     const monitor = function (key, content, cb) {
       if (key.substring(0, 4) === 'ping') {
-        this.pong(content)
+        self.pong(content)
       } else if (key.substring(0, 5) === 'state') {
-        this.state()
+        self.state()
       }
       cb()
-    }.bind(this)
+    }
 
     const uuid = require('node-uuid')
-    const queue = (name + '_monitor_' + uuid.v4()).replace(/-/g, '')
+    const queue = name + '_monitor_' + uuid.v4()
 
     messageBusChannel.subscribe('ping', monitor, queue, false, { exclusive: true, autoDelete: true })
     messageBusChannel.subscribe('ping.' + name, monitor, queue, false, { exclusive: true, autoDelete: true })
@@ -26,6 +28,14 @@ function ServiceMonitor (service, messageBusChannel) {
       messageBusChannel.subscribe('state', monitor, queue, false, { exclusive: true, autoDelete: true })
       messageBusChannel.subscribe('state.' + name, monitor, queue, false, { exclusive: true, autoDelete: true })
     }
+  }
+
+  this.setPackageInformation = function (info) {
+    packageInformation = info
+  }
+
+  this.getPackageInformation = function () {
+    return packageInformation
   }
 
   this.pong = function (content) {
@@ -40,10 +50,12 @@ function ServiceMonitor (service, messageBusChannel) {
       throw new Error('An unnamed service cannot pong')
     }
     var state = sm.serviceDefines(service, 'getState') ? service['getState']() : {}
-    messageBusChannel.publish(['state', name, id].join('.'), new Buffer(JSON.stringify({
+    const info = self.getPackageInformation()
+    messageBusChannel.publish(['state', name, id].join('.'), {
       state: state,
-      uptime: Date.now() - startTime
-    })))
+      uptime: Date.now() - startTime,
+      version: info && info.version ? info.version : 'unknown'
+    })
   }
 }
 
