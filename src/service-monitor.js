@@ -41,7 +41,7 @@ function ServiceMonitor (service, messageBusChannel) {
     if (name === null) {
       throw new Error('An unnamed service cannot pong')
     }
-    messageBusChannel.publish(['pong', name, id].join('.'), content)
+    messageBusChannel.publish(['monitor', 'pong', name, id].join('.'), content)
   }
 
   this.state = function () {
@@ -50,7 +50,7 @@ function ServiceMonitor (service, messageBusChannel) {
     }
     var state = sm.serviceDefines(service, 'getState') ? service['getState']() : {}
     const info = self.getPackageInformation()
-    messageBusChannel.publish(['state', name, id].join('.'), {
+    messageBusChannel.publish(['monitor' ,'state', name, id].join('.'), {
       state: state,
       uptime: Date.now() - startTime,
       version: info && info.version ? info.version : 'unknown'
