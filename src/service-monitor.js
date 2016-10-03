@@ -1,7 +1,6 @@
-const sm = require('./service-manager')
-const uuid = require('node-uuid')
-
 function ServiceMonitor (service, messageBusChannel) {
+  const sm = require('./service-manager')
+  const uuid = require('node-uuid')
   const name = sm.serviceDefines(service, 'getName') ? service['getName']() : null
   const id = uuid.v4()
   const startTime = Date.now()
@@ -9,6 +8,7 @@ function ServiceMonitor (service, messageBusChannel) {
   var packageInformation = {}
 
   if (name !== null) {
+    const queue = name + '_monitor_' + uuid.v4()
     const monitor = function (key, content, cb) {
       if (key.substring(0, 4) === 'ping') {
         self.pong(content)
@@ -17,9 +17,6 @@ function ServiceMonitor (service, messageBusChannel) {
       }
       cb()
     }
-
-    const uuid = require('node-uuid')
-    const queue = name + '_monitor_' + uuid.v4()
 
     messageBusChannel.subscribe('ping', monitor, queue, false, { exclusive: true, autoDelete: true })
     messageBusChannel.subscribe('ping.' + name, monitor, queue, false, { exclusive: true, autoDelete: true })
