@@ -18,12 +18,12 @@ function ServiceMonitor (service, messageBusChannel) {
       cb()
     }
 
-    messageBusChannel.subscribe('ping', monitor, queue, false, { exclusive: true, autoDelete: true })
-    messageBusChannel.subscribe('ping.' + name, monitor, queue, false, { exclusive: true, autoDelete: true })
+    messageBusChannel.subscribe('ping.monitor', monitor, queue, false, { exclusive: true, autoDelete: true })
+    messageBusChannel.subscribe(['ping', name, 'monitor'].join('.'), monitor, queue, false, { exclusive: true, autoDelete: true })
 
     if (sm.serviceDefines(service, 'getState')) {
-      messageBusChannel.subscribe('state', monitor, queue, false, { exclusive: true, autoDelete: true })
-      messageBusChannel.subscribe('state.' + name, monitor, queue, false, { exclusive: true, autoDelete: true })
+      messageBusChannel.subscribe('state.monitor', monitor, queue, false, { exclusive: true, autoDelete: true })
+      messageBusChannel.subscribe(['state', name, 'monitor'].join('.'), monitor, queue, false, { exclusive: true, autoDelete: true })
     }
   }
 
