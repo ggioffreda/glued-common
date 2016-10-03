@@ -17,13 +17,15 @@ function ServiceMonitor (service, messageBusChannel) {
       }
       cb()
     }
+    const subscribe = function (topic) {
+      messageBusChannel.subscribe(topic, monitor, queue, false, { exclusive: true, autoDelete: true })
+    }
 
-    messageBusChannel.subscribe('ping.monitor', monitor, queue, false, { exclusive: true, autoDelete: true })
-    messageBusChannel.subscribe(['ping', name, 'monitor'].join('.'), monitor, queue, false, { exclusive: true, autoDelete: true })
-
+    subscribe('ping.monitor')
+    subscribe(['ping', name, 'monitor'].join('.'))
     if (sm.serviceDefines(service, 'getState')) {
-      messageBusChannel.subscribe('state.monitor', monitor, queue, false, { exclusive: true, autoDelete: true })
-      messageBusChannel.subscribe(['state', name, 'monitor'].join('.'), monitor, queue, false, { exclusive: true, autoDelete: true })
+      subscribe('state.monitor')
+      subscribe(['state', name, 'monitor'].join('.'))
     }
   }
 
