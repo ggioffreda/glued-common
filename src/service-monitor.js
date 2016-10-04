@@ -9,7 +9,7 @@ function ServiceMonitor (service, messageBusChannel) {
 
   if (name !== null) {
     const queue = name + '_monitor_' + uuid.v4()
-    const monitor = function (key, content, cb) {
+    const monitor = function (key, content, rawContent, cb) {
       if (key.substring(0, 4) === 'ping') {
         self.pong(content)
       } else if (key.substring(0, 5) === 'state') {
