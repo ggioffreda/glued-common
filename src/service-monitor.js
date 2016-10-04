@@ -51,7 +51,7 @@ function ServiceMonitor (service, messageBusChannel) {
     }
     var state = sm.serviceDefines(service, 'getState') ? service['getState']() : {}
     const info = self.getPackageInformation()
-    messageBusChannel.publish(['monitor' ,'state', name, id].join('.'), {
+    messageBusChannel.publish(['monitor', 'state', name, id].join('.'), {
       state: state,
       uptime: Date.now() - startTime,
       version: info && info.version ? info.version : 'unknown'
