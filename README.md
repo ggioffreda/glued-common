@@ -128,5 +128,8 @@ You can then load your service like so:
 const ServiceManager = require('glue-common').ServiceManager,
   manager = new ServiceManager(); // this will initialise a new manager
   
-manager.load(new MyService());
+manager.load(new MyService(), require('./package.json'));
 ```
+
+The second parameter is optional but it's useful to provide it so the monitor
+can expose the version of the micro service.
