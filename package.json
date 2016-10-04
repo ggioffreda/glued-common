@@ -1,6 +1,6 @@
 {
   "name": "glued-common",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Common utilities for Glue micro services",
   "main": "index.js",
   "dependencies": {
