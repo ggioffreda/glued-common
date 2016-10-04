@@ -27,7 +27,7 @@ function ServiceMonitor (service, messageBusChannel) {
       subscribe('state.monitor')
       subscribe(['state', name, 'monitor'].join('.'))
     }
-    messageBusChannel.publish(['monitor', 'init', name, id], Date.now())
+    messageBusChannel.publish(['monitor', 'init', name, id].join('.'), Date.now())
   }
 
   this.setPackageInformation = function (info) {
