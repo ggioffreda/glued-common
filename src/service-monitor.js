@@ -23,9 +23,11 @@ function ServiceMonitor (service, messageBusChannel) {
 
     subscribe('ping.monitor')
     subscribe(['ping', name, 'monitor'].join('.'))
+    subscribe(['ping', name, id, 'monitor'].join('.'))
     if (sm.serviceDefines(service, 'getState')) {
       subscribe('state.monitor')
       subscribe(['state', name, 'monitor'].join('.'))
+      subscribe(['state', name, id, 'monitor'].join('.'))
     }
     messageBusChannel.publish(['monitor', 'init', name, id].join('.'), Date.now())
   }
