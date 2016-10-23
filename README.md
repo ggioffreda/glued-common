@@ -145,16 +145,16 @@ activate monitoring make sure your service defines its name through the
 
 Pinging is useful for making sure services are running. The micro services
 will reply with a pong message on the topic
-**monitor.pong.<service name>.<service ID>** with the Unix timestamp as
+**monitor.pong.[service name].[service ID]** with the Unix timestamp as
 content of the message.
 
 Each monitored service listens for ping requests on the following topics:
 
 - **ping.monitor** all services will reply to this message with a pong;
-- **ping.<service name>.monitor** only the specified service will reply to 
+- **ping.[service name].monitor** only the specified service will reply to 
   this message, if multiple instances of the same services are running they
   will all reply with a pong;
-- **ping.<service name>.<service ID>.monitor** only the specified instance
+- **ping.[service name].[service ID].monitor** only the specified instance
   of the specified service will reply to this message with a pong.
 
 #### Monitoring the internal state
@@ -163,7 +163,7 @@ Monitoring the internal state of a service can provide useful information
 for logging, statistics or load balancing purposes. Each services
 internally defines a set of properties to expose upon request and will
 broadcast them on the topic
-**monitor.state.<service name>.<service ID>**. All services will also
+**monitor.state.[service name].[service ID]**. All services will also
 expose by default the uptime of the service, its version and the hostname
 of the machine they are running on. For example:
 
@@ -182,17 +182,17 @@ Each monitored service listens for internal state requests on the
 following topics:
 
 - **state.monitor** all services will broadcast their internal state;
-- **state.<service name>.monitor** only the specified service will
+- **state.[service name].monitor** only the specified service will
   broadcast its state, if multiple instances of that same service are
   running then all of them will broadcast;
-- **state.<service name>.<service ID>.monitor** only the specified instance
+- **state.[service name].[service ID].monitor** only the specified instance
   of the given service will broadcast its state.
   
 #### Host information
 
 This is useful for getting detailed information about the host machine.
 Each service targeted by the request will broadcast on the topic
-**monitor.state.<service name>.<service ID>**, exposing:
+**monitor.state.[service name].[service ID]**, exposing:
 
 - os.arch
 - os.cpus
@@ -216,8 +216,8 @@ documentation for a more detailed explanation about each item.
 All monitored services will listen on the following topics:
 
 - **info.monitor** all services will broadcast information about the host;
-- **info.<service name>.monitor** only the matching service will broadcast
+- **info.[service name].monitor** only the matching service will broadcast
   information about its host, if multiple instances are running then all of
   them will broadcast;
-- **info.<service name>.<service ID>.monitor** the specified instance of 
+- **info.[service name].[service ID].monitor** the specified instance of 
   the given service will broadcast its host information.
