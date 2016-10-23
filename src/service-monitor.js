@@ -1,6 +1,7 @@
 function ServiceMonitor (service, messageBusChannel) {
   const sm = require('./service-manager')
   const uuid = require('node-uuid')
+  const os = require('os')
   const name = sm.serviceDefines(service, 'getName') ? service['getName']() : null
   const id = uuid.v4()
   const startTime = Date.now()
@@ -56,7 +57,8 @@ function ServiceMonitor (service, messageBusChannel) {
     messageBusChannel.publish(['monitor', 'state', name, id].join('.'), {
       state: state,
       uptime: Date.now() - startTime,
-      version: info && info.version ? info.version : 'unknown'
+      version: info && info.version ? info.version : 'unknown',
+      hostname: os.hostname()
     })
   }
 }
