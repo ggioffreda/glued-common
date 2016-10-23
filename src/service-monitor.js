@@ -38,7 +38,7 @@ function ServiceMonitor (service, messageBusChannel) {
     messageBusChannel.publish(['monitor', 'init', name, id].join('.'), Date.now())
   }
 
-  function checkName() {
+  function checkName () {
     if (name === null) {
       throw new Error('An unnamed service cannot pong')
     }
@@ -88,7 +88,7 @@ function ServiceMonitor (service, messageBusChannel) {
         type: os.type(),
         uptime: os.uptime()
       }
-    });
+    })
   }
 }
 
