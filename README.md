@@ -1,8 +1,7 @@
 Glue - Common Utilities
 =======================
 
-Collection of common utilities for Glue micro services. Not to do the same boring
-things over and over again.
+Collection of common utilities for Glue micro services.
 
 [![Build Status](https://travis-ci.org/ggioffreda/glued-common.svg?branch=master)](https://travis-ci.org/ggioffreda/glued-common)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
@@ -15,6 +14,7 @@ Available utilities are:
 - [Data Layer initialisation](#data-layer-initialisation)
 - [Message Bus initialisation](#message-bus-initialisation)
 - [Service Manager](#service-manager)
+- [Service Monitor](#service-monitor)
 
 ### Data Layer initialisation
 
@@ -133,3 +133,91 @@ manager.load(new MyService(), require('./package.json'));
 
 The second parameter is optional but it's useful to provide it so the monitor
 can expose the version of the micro service.
+
+### Service Monitor
+
+The service monitor provides a common interface across Glue services for
+checking their health status and fetching useful information. To automatically
+activate monitoring make sure your service defines its name through the 
+`getName()` method.
+
+#### Health check
+
+Pinging is useful for making sure services are running. The micro services
+will reply with a pong message on the topic
+**monitor.pong.<service name>.<service ID>** with the Unix timestamp as
+content of the message.
+
+Each monitored service listens for ping requests on the following topics:
+
+- **ping.monitor** all services will reply to this message with a pong;
+- **ping.<service name>.monitor** only the specified service will reply to 
+  this message, if multiple instances of the same services are running they
+  will all reply with a pong;
+- **ping.<service name>.<service ID>.monitor** only the specified instance
+  of the specified service will reply to this message with a pong.
+
+#### Monitoring the internal state
+
+Monitoring the internal state of a service can provide useful information
+for logging, statistics or load balancing purposes. Each services
+internally defines a set of properties to expose upon request and will
+broadcast them on the topic
+**monitor.state.<service name>.<service ID>**. All services will also
+expose by default the uptime of the service, its version and the hostname
+of the machine they are running on. For example:
+
+```json
+{
+   "state": {
+     "internal_state": "goes here"
+   },
+   "uptime": 123456,
+   "version": "v1.2.3",
+   "hostname": "some.example.com"
+}
+```
+
+Each monitored service listens for internal state requests on the
+following topics:
+
+- **state.monitor** all services will broadcast their internal state;
+- **state.<service name>.monitor** only the specified service will
+  broadcast its state, if multiple instances of that same service are
+  running then all of them will broadcast;
+- **state.<service name>.<service ID>.monitor** only the specified instance
+  of the given service will broadcast its state.
+  
+#### Host information
+
+This is useful for getting detailed information about the host machine.
+Each service targeted by the request will broadcast on the topic
+**monitor.state.<service name>.<service ID>**, exposing:
+
+- os.arch
+- os.cpus
+- os.endianness
+- os.freemem
+- os.homedir
+- os.hostname
+- os.loadavg
+- os.network_interfaces
+- os.platform
+- os.release
+- os.tmpdir
+- os.totalmem
+- os.type
+- os.uptime
+
+The service monitor internally uses the [Node.js OS module](https://nodejs.org/dist/latest-v4.x/docs/api/os.html)
+for retrieving the above information, you can refer to the official 
+documentation for a more detailed explanation about each item.
+
+All monitored services will listen on the following topics:
+
+- **info.monitor** all services will broadcast information about the host;
+- **info.<service name>.monitor** only the matching service will broadcast
+  information about its host, if multiple instances are running then all of
+  them will broadcast;
+- **info.<service name>.<service ID>.monitor** the specified instance of 
+  the given service will broadcast its host information.
